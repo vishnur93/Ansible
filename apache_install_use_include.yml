@@ -1,0 +1,63 @@
+##Installing apache on Redhat server as file RedHat.yml
+
+---
+- name: "Install apache on Redhat server"
+  yum:
+    name: httpd
+    state: present
+
+- name: "Starting apache on Redhat Server"
+  service:
+    name: httpd
+    state: started
+    enabled: true
+
+- name: "Creating index.html file"
+  copy:
+    content: "<h1><center>Sample page for testing</center></h1>"
+    dest: /var/www/html/index.html
+    owner: apache
+    group: apache
+
+
+##Installing apache on Ubuntu server as file Ubuntu.yml
+
+
+
+---
+- name: "Install apache on Ubuntu server"
+  yum:
+    name: apache2
+    state: present
+    cache_update: true
+
+- name: "Starting apache on Ubuntu server"
+  service:
+    name: apache2
+    state: started
+    enabled: true
+
+- name: "Creating index.html file"
+  copy:
+    content: "<h1><center>Sample page for testing</center></h1>"
+    dest: /var/www/html/index.html
+    owner: apache2
+    group: apache2
+
+
+
+
+##Installing apache on Redhat and Ubuntu with include task
+
+
+---
+- name: "Install apache on Ubuntu and Redhat servers using include task"
+  hosts: all
+  become: yes
+  tasks:
+    - include_tasks: RedHat.yml
+      when: ansible_os_family == "RedHat"
+
+    - include_tasks: Ubuntu.yml
+      when: ansible_os_family == "Debian"
+
