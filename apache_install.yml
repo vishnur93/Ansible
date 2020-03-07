@@ -1,0 +1,33 @@
+---
+- name: "Installing apache on Ubuntu & Redhat"
+  hosts: all
+  become: yes
+  tasks:
+    - name: "Ubuntu : Installing apache"
+      when: ansible_os_family == "Debian"
+      apt:
+        name: apache2
+        state: present
+        update_cache: true
+  
+    - name: "Ubuntu: Service start and enabling"
+      when: ansible_os_family == "Debian"
+      service:
+        name: apache2
+        state: started
+        enabled: true
+  
+    - name: "Redhat: Installing apache"
+      when: ansible_os_family == "RedHat"
+      yum:
+        name: httpd
+        state: present
+
+    - name: "Redhat: Service start and enabling"
+      when: ansible_os_family == "RedHat"
+      service:
+        name: httpd
+        state: started
+        enabled: true
+   
+  
