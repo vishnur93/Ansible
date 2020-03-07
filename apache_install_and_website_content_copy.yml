@@ -1,0 +1,23 @@
+---
+- name: "Apache installation and website conent copying"
+  hosts: amazon
+  become: yes
+  tasks:
+    - name: "Install apache"
+      yum:
+        name: httpd
+        state: present
+   
+    - name: "Start apache"
+      service:
+        name: httpd
+        state: started
+        enabled: true 
+  
+    - name: "Copying website content"
+      copy:
+        src: /root/html/
+        dest: /var/www/html/
+        owner: apache
+        group: apache 
+
