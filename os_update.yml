@@ -1,0 +1,17 @@
+--- 
+- name: "Updating Rehat and Debian based systems"
+  hosts: all
+  become: yes
+  tasks: 
+    - name: "Rehat: updating"
+      when: ansible_os_family == "RedHat"
+      yum:
+        name: "*"
+        state: latest
+
+    - name: "Debian: updating"
+      when: ansible_os_family == "Debian"
+      apt:
+        name: "*"
+        state: latest
+        update_cache: true
