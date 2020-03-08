@@ -1,0 +1,20 @@
+--- 
+- name: "Variable declaration and printing"
+  hosts: all
+  become: yes
+  vars:
+    package: httpd
+    version: 2.2
+  tasks:
+    - name: "printing the package"
+      debug:
+        var: package
+
+    - name: "printing the vesrion"
+      debug:
+        var: version
+  
+    - name: "printing both package and version"
+      debug:
+        msg: "package: {{ package }}, version: {{ version }}"
+
