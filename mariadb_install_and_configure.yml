@@ -1,0 +1,66 @@
+## Creating a file as mysql.txt which contains the required variables
+
+# cat mysql.txt
+
+---
+mysql_root_password: "type password of root user that you need"
+mysql_database: "type databse you need"
+
+
+## Encrypting mysql.txt with password (secure the details)
+
+# ansible-vault encrypt mysql.txt
+New Vault password:
+Confirm New Vault password:
+Encryption successful
+
+
+## Installig and configuring Mariadb (you can execute the below .yml file using --ask-vault-pass as argument)
+
+
+
+---
+- name: "Installing and configuring Mariadb on RedHat"
+  hosts: all
+  become: yes
+  vars_files:
+    - mysql.txt  
+  tasks:
+    
+    - name: "Mariadb: Installation"
+      yum: 
+        name:
+          - mariadb-server
+          - MySQL-python
+        state: present
+  
+    - name: "Mariadb: Restart/Enable"
+      service:
+        name: mariadb
+        state: restarted
+        enabled: true
+  
+    - name: "Mariadb: changing password for root user"
+      ignore_errors: true
+      mysql_user:
+        login_user: "root"
+        login_password: ""
+        user: "root"
+        password: "{{ mysql_root_password }}"
+        host_all: true
+    
+    - name: "Mariadb: Removing anonymous user"
+      mysql_user:
+        login_user: "root"
+        login_password: "{{ mysql_root_password }}"
+        user: ""
+        state: absent
+        host_all: true
+
+    - name: "Mariadb: Adding a database"
+      mysql_db:
+        login_user: "root"
+        login_password: "{{ mysql_root_password }}"
+        name: "{{ mysql_database }}"
+        state: present
+
