@@ -1,0 +1,63 @@
+## first method
+
+---
+- name : "Installing httpd,php,mariadb on redhat server"
+  hosts: all
+  become: yes
+  tasks:
+    - name: "Install all the mentioned packages"
+      yum:
+        name: [httpd, php, mariadb-server]
+        state: present
+
+
+
+##second method
+
+---
+- name : "Installing httpd,php,mariadb on redhat server"
+  hosts: all
+  become: yes
+  tasks:
+    - name: "Install all the mentioned packages"
+      yum:
+        name: httpd, php, mariadb-server
+        state: present
+
+
+##third method
+
+---
+- name : "Installing httpd,php,mariadb on redhat server"
+  hosts: all
+  become: yes
+  tasks:
+    - name: "Install all the mentioned packages"
+      yum:
+        name: 
+          - httpd
+          - php
+          - mariadb-server
+        state: present
+
+
+## forth method {using with_items}  
+
+
+---
+- name : "Installing httpd,php,mariadb on redhat server"
+  hosts: all
+  become: yes
+  tasks:
+    - name: "Install all the mentioned packages"
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - httpd
+        - php
+        - mariadb-server
+
+
+
+  
